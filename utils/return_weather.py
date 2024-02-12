@@ -1,7 +1,9 @@
 import datetime
+import pytz
+
 from typing import List, Dict, Optional, Any
 
-from tg_api.core import get_weather_via_api
+from tg_API.core import get_weather_via_api
 
 
 def format_weather_response(weather_data_hour: Dict, state: Optional[Any] = False) -> List:
@@ -47,12 +49,19 @@ def now_weather_req(weather_data_by_hour_list: List) -> List:
     :param weather_data_by_hour_list:  hourly data list in which the right hour is found for the response.
     :return: List
     """
+    tz = pytz.timezone('Europe/Bucharest')
+
     weather_response = []
-    date_time_str = datetime.datetime.now().strftime("%Y-%m-%dT%H")
+    date_time_str = datetime.datetime.now(tz).strftime("%Y-%m-%dT%H")
+    # print("date_time_str: ", date_time_str)
     for weather_data_hour in weather_data_by_hour_list:
+        # print("weather_data_hour: ", weather_data_hour)
         if weather_data_hour["datetimeStr"][0:13] == date_time_str:
             weather_response = format_weather_response(weather_data_hour)
+            # print("found it!")
+            # print("weather_response: ", weather_response)
             break
+    # print("weather_response: ", weather_response)
     return weather_response
 
 
@@ -127,10 +136,12 @@ def weather_req(argument: str, command: str) -> List:
     :return: List of requested info
     """
     temp_list = argument.split()
+    # print("temp_list: ", temp_list)
     city = temp_list.pop(0)
     data_time = 'T'.join(temp_list)
 
     weather_data_by_hour_list = get_weather_via_api(city=city)["locations"][city]["values"]
+    # print("weather_data_by_hour_list: ", weather_data_by_hour_list)
 
     match command:
         case 'now':
@@ -141,5 +152,6 @@ def weather_req(argument: str, command: str) -> List:
             response = min_max_weather_req('max', weather_data_by_hour_list)
         case "custom":
             response = custom_weather_req(data_time, weather_data_by_hour_list)
+    # print("response: ", response)
 
     return response

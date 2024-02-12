@@ -23,6 +23,7 @@ async def get_weather_response(args: str, user_id: int, msg_text: str, command_w
     if args is None:
         last_city = read_last_city_from_db(user_id)
         weather_string = "\n".join(weather_req(last_city, command_word))
+        # print("weather_string: ", weather_string)
         bot_response = 'Weather in ' + str(last_city) + ':\n' + weather_string
         await check_and_save(args='', msg=msg_text, command_word=command_word,
                              username=username, userid=user_id,

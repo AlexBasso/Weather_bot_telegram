@@ -1,0 +1,6 @@
+version: '3'
+services:
+  myapp:
+    build: .
+    ports:
+      - "8000:8000"  # Adjust port mapping as necessary

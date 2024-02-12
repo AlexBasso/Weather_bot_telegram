@@ -26,8 +26,9 @@ def get_weather_via_api(city: str) -> Dict:
     """
     querystring = {"aggregateHours": "1", "location": city, "contentType": "json",
                    "unitGroup": "metric", "shortColumnNames": "false"}
-
+    print("querystring: ", querystring)
     response = weather('GET', url, headers=headers, params=querystring, timeout=5)
     data = json.loads(response.text)
+    # print("data: ", data)
 
     return data
